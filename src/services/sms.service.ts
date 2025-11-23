@@ -1,10 +1,7 @@
 import { Injectable } from "@angular/core";
-import { SmsRetrieverApi } from "@awesome-cordova-plugins/sms-retriever-api/ngx";
-import { SMS } from "@awesome-cordova-plugins/sms/ngx";
 import { ExpenseService } from "./expense.service";
 import { Expense } from "../models/expense.model";
 import { SMSEntity } from "../models/sms.model";
-import { generate } from "rxjs";
 import { generateUUID } from "./context.service";
 import { ExpenseCategory, ExpenseSource, TransactionType } from "../models/enums.model";
 import { Platform } from "@ionic/angular/standalone";
@@ -21,10 +18,6 @@ export class SMSService {
     ) {
     }
 
-    get smsReceiver(){
-        return (window as any).SMSReceive;
-    }
-
     creditKeywords = ['credited', 'credit', 'received', 'deposited'];
     debitKeywords = ['debited', 'debit', 'withdrawn', 'purchased', 'spent', 'paid'];
 
@@ -33,6 +26,7 @@ export class SMSService {
     }
 
     startListeningToIncomingMessages(expenseAddedCallback?: (expense: Expense) => void) {
+        console.log(expenseAddedCallback);
         this.platform.ready().then(() => {
             if (this.platform.is('android')) {
                 this.initializeSMSListener(expenseAddedCallback);
@@ -41,9 +35,10 @@ export class SMSService {
     }
 
     initializeSMSListener(expenseAddedCallback?: (expense: Expense) => void) {
-        this.smsReceiver.startWatch(() => {
+        (window as any).cordova.plugins.SMSReceive.startWatch(() => {
             document.addEventListener('onSMSArrive', (e: any) => {
-                const sms = e.data;
+                const sms = e;
+                console.log('SMS received', e);
                 console.log('FROM:', sms.address);
                 console.log('BODY:', sms.body);
                 this.onSmsReceived(sms, expenseAddedCallback);
@@ -52,38 +47,6 @@ export class SMSService {
             console.log('watch start failed', err)
         });
     }
-
-
-    // this.smsRetriever.startWatch()
-    //     .subscribe((res: any) => {
-    //         console.log('SMS listener started', res);
-    //         this.smsRetriever.onSMSArrive().subscribe((sms: any) => {
-    //             console.log('SMS received', sms);
-    //             const transactionType = this.getTransactionTypeFromText(sms.body);
-    //             if (!transactionType) {
-    //                 return;
-    //             }
-
-    //             const amount = this.extractAmountFromText(sms.body);
-    //             if (!amount) {
-    //                 return;
-    //             }
-
-    //             const expense = this.convertSmsToExpense(sms);
-    //             this.expenseService.saveExpense(expense).then(() => {
-    //                 console.log('Expense saved from SMS', expense);
-    //                 if (expenseAddedCallback) {
-    //                     expenseAddedCallback(expense);
-    //                 }
-    //             }).catch((err) => {
-    //                 console.error('Error saving expense from SMS', err);
-    //             });
-
-    //             // Process the received SMS here
-    //         });
-    //     }, (err: any) => {
-    //         console.error('Error starting SMS listener', err);
-    //     });
 
     onSmsReceived(sms: SMSEntity, expenseAddedCallback?: (expense: Expense) => void) {
         console.log('SMS received', sms);
@@ -102,6 +65,9 @@ export class SMSService {
             console.log('Expense saved from SMS', expense);
             if (expenseAddedCallback) {
                 expenseAddedCallback(expense);
+            }
+            else {
+                console.log('No expense added callback provided');
             }
         }).catch((err) => {
             console.error('Error saving expense from SMS', err);
