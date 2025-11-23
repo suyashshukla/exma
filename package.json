@@ -13,10 +13,22 @@
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
+    "@angular/fire": "^19.2.0",
     "@angular/forms": "^19.2.0",
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "@awesome-cordova-plugins/android-permissions": "^8.1.0",
+    "@awesome-cordova-plugins/sms": "^8.1.0",
+    "@awesome-cordova-plugins/sms-retriever-api": "^8.1.0",
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/angular": "^2.0.3",
+    "@capacitor/core": "latest",
+    "@ionic/angular": "^8.7.10",
+    "cordova-plugin-android-permissions": "^1.1.5",
+    "cordova-plugin-sms": "^1.0.5",
+    "cordova-plugin-sms-receive": "^2.0.0",
+    "ngx-bootstrap": "^19.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -25,6 +37,7 @@
     "@angular-devkit/build-angular": "^19.2.0",
     "@angular/cli": "^19.2.0",
     "@angular/compiler-cli": "^19.2.0",
+    "@capacitor/cli": "latest",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
@@ -32,6 +45,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "@ionic/angular-toolkit": "latest"
   }
 }
