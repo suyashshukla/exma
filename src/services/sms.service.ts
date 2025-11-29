@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { ExpenseService } from "./expense.service";
 import { Expense } from "../models/expense.model";
 import { SMSEntity } from "../models/sms.model";
-import { generateUUID } from "./context.service";
 import { ExpenseCategory, ExpenseSource, TransactionType } from "../models/enums.model";
 import { Platform } from "@ionic/angular/standalone";
+import { UtilService } from "./util.service";
 declare var SMSReceive: any;  // ← ADD THIS HERE
 
 @Injectable({
@@ -83,7 +83,7 @@ export class SMSService {
         }
 
         return new Expense({
-            expenseId: generateUUID(),
+            expenseId: UtilService.generateUUID(),
             title: sms.address,
             amount: this.extractAmountFromText(sms.body) || 0,
             timestamp: sms.date ? new Date(sms.date) : new Date(),

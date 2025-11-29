@@ -1,0 +1,117 @@
+<div class="app-container">
+  
+  <header class="header-section">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <div class="brand-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          EXMA
+        </div>
+        <h1 class="fw-bold text-dark mb-0">Overview</h1>
+        <p class="date-display">{{ today | date:'EEEE, d MMMM' }}</p>
+      </div>
+      
+      <div class="bg-light rounded-circle p-2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <section class="transaction-container">
+    <div class="section-title">
+      <span>Recent Activity</span>
+      <span class="badge bg-light text-secondary rounded-pill fw-normal px-3">History</span>
+    </div>
+
+    <div *ngIf="expenses.length === 0" class="text-center py-5 text-muted">
+      <p>No transactions yet.</p>
+    </div>
+
+    <div *ngFor="let expense of expenses" class="transaction-card d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <div class="icon-box" [ngClass]="expense.type == expenseType.CREDIT ? 'credit' : 'debit'">
+          
+          <svg *ngIf="expense.type == expenseType.CREDIT" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+
+          <svg *ngIf="expense.type != expenseType.CREDIT" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
+        </div>
+
+        <div class="tx-details">
+          <h6>{{ expense.title }}</h6>
+          <span>{{ expense.timestamp | date:'shortTime' }}</span>
+        </div>
+      </div>
+
+      <div class="tx-amount" [ngClass]="expense.type == expenseType.CREDIT ? 'text-success' : 'text-danger'">
+        {{ expense.type == expenseType.CREDIT ? '+' : '-' }}
+        {{ expense.amount | currency : 'INR' : 'symbol' : '1.0-0' }}
+      </div>
+    </div>
+  </section>
+
+  <nav class="bottom-actions">
+    <button class="btn-action btn-credit" (click)="openAddTransactionModal(addTransaction, expenseType.CREDIT)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Income
+    </button>
+
+    <button class="btn-action btn-debit" (click)="openAddTransactionModal(addTransaction, expenseType.DEBIT)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Expense
+    </button>
+  </nav>
+
+</div>
+
+<ng-template #addTransaction>
+  <div class="modal-content custom-modal-content">
+    <div class="modal-header border-0 pb-0">
+      <h5 class="modal-title fw-bold text-dark">New Transaction</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body pt-4">
+      <form [formGroup]="addTransactionForm">
+
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-bold text-uppercase">What is this for?</label>
+          <div class="input-group input-group-lg">
+            <span class="input-group-text bg-light border-0">📝</span>
+            <input type="text" class="form-control bg-light border-0" formControlName="title" placeholder="e.g. Netflix, Salary" />
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label text-muted small fw-bold text-uppercase">Amount</label>
+          <div class="input-group input-group-lg">
+            <span class="input-group-text bg-light border-0">₹</span>
+            <input type="number" class="form-control bg-light border-0 fw-bold" formControlName="amount" placeholder="0.00" />
+          </div>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal-footer border-0">
+      <button type="button" class="btn btn-primary w-100 py-3 rounded-3 fw-bold" 
+              style="background: var(--primary-grad); border:none;"
+              (click)="saveExpense()">
+        Save Transaction
+      </button>
+    </div>
+  </div>
+</ng-template>

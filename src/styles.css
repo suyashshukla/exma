@@ -22,7 +22,8 @@
   background-color: var(--bg-body);
   min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  padding-bottom: 100px; /* Space for the fixed bottom bar */
+  padding-bottom: 100px;
+  /* Space for the fixed bottom bar */
   color: var(--text-dark);
 }
 
@@ -61,7 +62,8 @@
 /* 4. Transaction List */
 .transaction-container {
   padding: 1.5rem;
-  margin-top: -2rem; /* Creates the overlap effect */
+  margin-top: -2rem;
+  /* Creates the overlap effect */
   position: relative;
   z-index: 20;
 }
@@ -79,7 +81,8 @@
 /* The "Glass" Card */
 .transaction-card {
   background: var(--surface-white);
-  backdrop-filter: blur(12px); /* The glass effect */
+  backdrop-filter: blur(12px);
+  /* The glass effect */
   -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
   padding: 1.25rem;
@@ -87,16 +90,24 @@
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: var(--shadow-soft);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Animation Setup */
   opacity: 0;
   animation: slideUp 0.5s ease-out forwards;
 }
 
 /* Staggered Animation delays for the first 3 items */
-.transaction-card:nth-child(1) { animation-delay: 0.1s; }
-.transaction-card:nth-child(2) { animation-delay: 0.2s; }
-.transaction-card:nth-child(3) { animation-delay: 0.3s; }
+.transaction-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.transaction-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.transaction-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 .transaction-card:hover {
   transform: translateY(-3px) scale(1.01);
@@ -121,8 +132,15 @@
   transform: scale(1.1);
 }
 
-.icon-box.credit { background: var(--success-bg); color: var(--success-text); }
-.icon-box.debit { background: var(--danger-bg); color: var(--danger-text); }
+.icon-box.credit {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.icon-box.debit {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
 
 .tx-details h6 {
   margin: 0;
@@ -157,7 +175,7 @@
   display: flex;
   gap: 1rem;
   z-index: 100;
-  border-top: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .btn-action {
@@ -175,11 +193,23 @@
   transition: transform 0.1s ease, filter 0.2s;
 }
 
-.btn-credit { background: #ecfdf5; color: #047857; }
-.btn-debit { background: #fef2f2; color: #b91c1c; }
+.btn-credit {
+  background: #ecfdf5;
+  color: #047857;
+}
 
-.btn-action:active { transform: scale(0.96); }
-.btn-action:hover { filter: brightness(0.97); }
+.btn-debit {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.btn-action:active {
+  transform: scale(0.96);
+}
+
+.btn-action:hover {
+  filter: brightness(0.97);
+}
 
 /* 6. Modal Customization */
 /* Note: We use ::ng-deep if this is inside a component, 
@@ -228,8 +258,49 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.login-logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1.5rem;
+}
+
+.h-20px {
+  height: 20px;
+}
+
+
+.mobile-label {
+  display: none;
+}
+
+.login-label {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 10px !important;
+  }
+
+  .mobile-label {
+    display: inline !important;
+  }
+
+  .login-label {
+    font-size: 14px !important;
+    margin-bottom: 20px !important;
+    font-weight: bold !important;
+    display: block !important;
+  }
+
+  .login-logo {
+    height: 80px !important;
   }
 }

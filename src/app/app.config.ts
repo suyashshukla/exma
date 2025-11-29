@@ -11,9 +11,21 @@ import { SMS } from '@awesome-cordova-plugins/sms/ngx';
 import { SmsRetrieverApi } from '@awesome-cordova-plugins/sms-retriever-api/ngx';
 import { AndroidPermissions, } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { provideIonicAngular } from '@ionic/angular/standalone';
-
+import { getApps } from 'firebase/app';
+import { browserLocalPersistence, getAuth, setPersistence } from 'firebase/auth';
+import { provideAuth } from '@angular/fire/auth';
+import { LoginService } from '../services/login.service';
+export function initFirebaseApp() {
+  if (!getApps().length) {
+    initializeApp(firebaseConfig);
+  }
+  return Promise.resolve(true);
+}
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideFirestore(() => getFirestore()), provideIonicAngular({}),
+    ContextService,
+    LoginService,
     AndroidPermissions,
     SMS,
     SmsRetrieverApi,
@@ -23,11 +35,15 @@ export const appConfig: ApplicationConfig = {
       ModalModule.forRoot(),
     ),
     provideAppInitializer(() => {
-      return inject(ContextService).initializeApplication();
+      return inject(ContextService).initialize();
       // Any global initialization can go here
     }),
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideFirestore(() => getFirestore()), provideIonicAngular({})]
+    provideFirebaseApp(() => initializeApp(firebaseConfig)), provideAuth(() => {
+      const auth = getAuth();
+      setPersistence(auth, browserLocalPersistence);
+      return auth;
+    }),
+  ]
 };
 
 export const firebaseConfig = {
@@ -39,3 +55,4 @@ export const firebaseConfig = {
   appId: "1:700101148488:web:6231ec5a253825dcdc7d7d",
   measurementId: "G-HYLTEP0F33"
 };
+

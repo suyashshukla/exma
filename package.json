@@ -29,6 +29,7 @@
     "cordova-plugin-sms": "^1.0.5",
     "cordova-plugin-sms-receive": "^2.0.0",
     "ngx-bootstrap": "^19.0.2",
+    "firebase": "^11.10.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

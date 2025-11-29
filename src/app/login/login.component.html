@@ -1,0 +1,28 @@
+<div class="container bg-white">
+  <div class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+
+    <!-- Brand Logo -->
+    <div class="mb-1">
+          <img src="../../assets/exma-logo-cropped.png" class="login-logo">
+    </div>
+
+    <div class="login-label">Login with</div>
+
+    <!-- Google Login -->
+    <button class="btn btn-outline-secondary w-50 mb-3 d-flex align-items-center justify-content-center"
+      (click)="signInWithGoogle()">
+      <img src="../../assets/google.png" alt="Google Logo" class="me-2 h-20px">
+      <span class="desktop-label">Login with Google</span>
+      <span class="mobile-label">Google</span>
+    </button>
+
+    <!-- Microsoft Login -->
+    <button class="btn btn-outline-secondary w-50 d-flex align-items-center justify-content-center"
+      (click)="signInWithMicrosoft()">
+      <img src="../../assets/microsoft.png" alt="Microsoft Logo" class="me-2 h-20px">
+      <span class="desktop-label">Login with Microsoft</span>
+      <span class="mobile-label">Microsoft</span>
+    </button>
+
+  </div>
+</div>
