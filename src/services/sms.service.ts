@@ -5,6 +5,7 @@ import { SMSEntity } from "../models/sms.model";
 import { ExpenseCategory, ExpenseSource, TransactionType } from "../models/enums.model";
 import { Platform } from "@ionic/angular/standalone";
 import { UtilService } from "./util.service";
+import { Capacitor } from "@capacitor/core";
 declare var SMSReceive: any;  // ← ADD THIS HERE
 
 @Injectable({
@@ -28,7 +29,7 @@ export class SMSService {
     startListeningToIncomingMessages(expenseAddedCallback?: (expense: Expense) => void) {
         console.log(expenseAddedCallback);
         this.platform.ready().then(() => {
-            if (this.platform.is('android')) {
+            if (Capacitor.isNativePlatform()) {
                 this.initializeSMSListener(expenseAddedCallback);
             }
         });

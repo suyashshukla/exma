@@ -14,6 +14,7 @@ import { GooglePlus } from '@awesome-cordova-plugins/google-plus/ngx';
 import { Platform } from '@ionic/angular/common';
 import { signInWithRedirect, UserCredential } from 'firebase/auth';
 import { Observable } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
     user$: Observable<User | null> = authState(this.auth);
 
     async signInWithGoogle() {
-        if (this.platform.is('android')) {
+        if (Capacitor.isNativePlatform()) {
             return await this.signInWithGoogleCredentials();
         }
         else {
@@ -48,7 +49,7 @@ export class AuthService {
     }
 
     async signInWithMicrosoft() {
-        if (this.platform.is('android')) {
+        if (Capacitor.isNativePlatform()) {
             return await this.signInWithMicrosoftCredential();
         }
         else {

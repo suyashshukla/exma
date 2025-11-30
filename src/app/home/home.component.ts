@@ -13,6 +13,7 @@ import { CurrencyPipe, DatePipe, NgClass, NgFor, NgIf } from "@angular/common";
 import { AppUser } from "../../models/user-context.model";
 import { AuthService } from "../../services/auth.service";
 import { LoaderService } from "../../services/loader.service";
+import { Capacitor } from "@capacitor/core";
 
 @Component({
     selector: "app-home",
@@ -77,6 +78,9 @@ export class HomeComponent implements OnInit {
     }
 
     checkForPermissions() {
+        if (!Capacitor.isNativePlatform()) {
+            return;
+        }
         this.loaderService.show();
         this.androidPermissions
             .requestPermissions([this.androidPermissions.PERMISSION.SEND_SMS, this.androidPermissions.PERMISSION.RECEIVE_SMS, this.androidPermissions.PERMISSION.READ_SMS, this.androidPermissions.PERMISSION.READ_PHONE_STATE])
