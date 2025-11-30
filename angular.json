@@ -38,6 +38,7 @@
           },
           "configurations": {
             "production": {
+              "outputPath": "../../../../usr/local/var/www/dist/exma",
               "budgets": [
                 {
                   "type": "initial",
