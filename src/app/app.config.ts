@@ -11,16 +11,10 @@ import { SMS } from '@awesome-cordova-plugins/sms/ngx';
 import { SmsRetrieverApi } from '@awesome-cordova-plugins/sms-retriever-api/ngx';
 import { AndroidPermissions, } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { provideIonicAngular } from '@ionic/angular/standalone';
-import { getApps } from 'firebase/app';
 import { browserLocalPersistence, getAuth, setPersistence } from 'firebase/auth';
 import { provideAuth } from '@angular/fire/auth';
 import { LoginService } from '../services/login.service';
-export function initFirebaseApp() {
-  if (!getApps().length) {
-    initializeApp(firebaseConfig);
-  }
-  return Promise.resolve(true);
-}
+import { GooglePlus } from '@awesome-cordova-plugins/google-plus/ngx';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideFirestore(() => getFirestore()), provideIonicAngular({}),
@@ -29,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     AndroidPermissions,
     SMS,
     SmsRetrieverApi,
+    GooglePlus,
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     importProvidersFrom(

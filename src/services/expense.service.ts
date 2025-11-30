@@ -16,8 +16,8 @@ export class ExpenseService {
     ) { }
 
     async saveExpense(expense: Expense) {
-        expense.userId = this.contextService.currentUser?.userId || '';
-        expense.deviceId = this.contextService.currentUser?.deviceId || '';
+        expense.userId = this.contextService.appUser?.userId || '';
+        expense.deviceId = this.contextService.appUser?.deviceId || '';
         expense.source = expense.source || ExpenseSource.MANUAL;
         expense.category = expense.category || ExpenseCategory.OTHER;
         const collectionRef = collection(this.firestore, 'expenses');
@@ -26,26 +26,28 @@ export class ExpenseService {
 
         const expenseUserMapping = new UserExpenseMapping({
             expenseId: expense.expenseId,
-            userId: this.contextService.currentUser?.userId
+            userId: this.contextService.appUser?.userId
         });
         const mappingCollectionRef = collection(this.firestore, 'user-expense-mappings');
         const docMappingRef = doc(mappingCollectionRef, expense.expenseId);
         await setDoc(docMappingRef, JSON.parse(JSON.stringify(expenseUserMapping)));
     }
 
-    removeExpense(expenseId: string) {
-        deleteDoc(doc(this.firestore, 'expenses', expenseId));
-        deleteDoc(doc(this.firestore, 'user-expense-mappings', expenseId));
+    async removeExpense(expenseId: string) {
+        await deleteDoc(doc(this.firestore, 'expenses', expenseId));
+        await deleteDoc(doc(this.firestore, 'user-expense-mappings', expenseId));
     }
 
     async updateExpense(expense: Expense) {
         await this.saveExpense(expense);
     }
 
-    async getExpensesForUser(): Promise<Expense[]> {
-        const userId = this.contextService.currentUser?.userId;
-        const currentDate = new Date();
+    async getExpensesForUser(date: Date): Promise<Expense[]> {
+        const userId = this.contextService.appUser?.userId;
+        const currentDate = new Date(date);
+        const endDate = new Date(date);
         currentDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         if (!userId) {
             return [];
         }
@@ -53,7 +55,8 @@ export class ExpenseService {
         const expenseCollectionRef = collection(this.firestore, 'expenses');
         const querySnapshot = query(expenseCollectionRef,
             where('userId', '==', userId),
-            where('timestamp', '>=', currentDate)
+            where('timestamp', '>=', currentDate),
+            where('timestamp', '<=', endDate)
         );
         const dataSnapshot = await getDocs(querySnapshot);
 
