@@ -1,7 +1,8 @@
 import { inject, Injectable } from "@angular/core";
 import { AppUser } from "../models/user-context.model";
 import { of } from "rxjs";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { PeriodType } from "../models/enums.model";
 import { User } from "firebase/auth";
 import { Firestore } from "@angular/fire/firestore";
 
@@ -24,6 +25,11 @@ export class LoginService {
         const userDocument = doc(usersCollection, user.uid);
         await setDoc(userDocument, JSON.parse(JSON.stringify(appUser)));
         return appUser;
+    }
+
+    async updatePreferredPeriod(userId: string, period: PeriodType): Promise<void> {
+        const userDocument = doc(collection(this.firestore, 'users'), userId);
+        await updateDoc(userDocument, { preferredPeriod: period });
     }
 
     async getCurrentUser(user: User) {

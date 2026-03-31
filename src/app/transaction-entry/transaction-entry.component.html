@@ -28,7 +28,9 @@
     <input class="note-input"
            type="text"
            [(ngModel)]="note"
-           placeholder="What's this for?" />
+           placeholder="What's this for?"
+           (focus)="zoomToInput($event)"
+           (blur)="resetZoom()" />
 
     <div class="meta-row">
       <div class="meta-pill">

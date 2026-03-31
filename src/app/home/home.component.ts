@@ -9,6 +9,7 @@ import { SMSService } from "../../services/sms.service";
 import { CurrencyPipe, DatePipe, NgClass, NgFor, NgIf } from "@angular/common";
 import { AppUser } from "../../models/user-context.model";
 import { AuthService } from "../../services/auth.service";
+import { LoginService } from "../../services/login.service";
 import { LoaderService } from "../../services/loader.service";
 import { Capacitor } from "@capacitor/core";
 
@@ -61,11 +62,13 @@ export class HomeComponent implements OnInit {
         private router: Router,
         private contextService: ContextService,
         private authService: AuthService,
+        private loginService: LoginService,
         private loaderService: LoaderService,
         private androidPermissions: AndroidPermissions,
         private smsService: SMSService,
     ) {
         this.currentUser = this.contextService.appUser;
+        this.currentPeriod = this.currentUser.preferredPeriod ?? PeriodType.MONTH;
     }
 
     ngOnInit(): void {
@@ -81,6 +84,8 @@ export class HomeComponent implements OnInit {
 
     setPeriod(period: PeriodType): void {
         this.currentPeriod = period;
+        this.contextService.appUser.preferredPeriod = period;
+        this.loginService.updatePreferredPeriod(this.currentUser.userId, period);
         this.referenceDate = new Date();
         this.selectedCategory = null;
         this.loadExpenses();
