@@ -1,0 +1,84 @@
+<div class="entry-screen" [ngClass]="transactionType === 'CREDIT' ? 'entry-income' : 'entry-expense'">
+
+  <!-- ── Top bar ─────────────────────────────────────────────────────────── -->
+  <header class="entry-header">
+    <button class="entry-back" (click)="goBack()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <span class="entry-title">{{ isEdit ? 'Edit' : 'New' }} Transaction</span>
+    <button class="entry-delete" *ngIf="isEdit" (click)="deleteTransaction()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14H6L5 6"/>
+        <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+      </svg>
+    </button>
+    <div *ngIf="!isEdit" class="entry-spacer"></div>
+  </header>
+
+  <!-- ── Amount display ──────────────────────────────────────────────────── -->
+  <div class="amount-section">
+    <div class="amount-display">
+      <span class="amount-currency">₹</span>
+      <span class="amount-value">{{ displayAmount }}</span>
+    </div>
+
+    <input class="note-input"
+           type="text"
+           [(ngModel)]="note"
+           placeholder="What's this for?" />
+
+    <div class="meta-row">
+      <div class="meta-pill">
+        <span>{{ getAccountIcon(selectedAccountId) }}</span>
+        <select class="meta-select" [(ngModel)]="selectedAccountId">
+          <option *ngFor="let acc of accounts" [value]="acc.accountId">{{ acc.name }}</option>
+        </select>
+      </div>
+      <div class="meta-pill">
+        <span>📅</span>
+        <input class="meta-select" type="date" [(ngModel)]="selectedDate" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Category grid  —  Monefy circular style ─────────────────────────── -->
+  <div class="cat-grid">
+    <button *ngFor="let cat of visibleCategories"
+            class="cat-grid-btn"
+            [class.selected]="selectedCategory === cat.key"
+            (click)="selectCategory(cat.key)">
+      <div class="cat-grid-circle"
+           [style.background]="cat.color + '22'"
+           [style.color]="cat.color">
+        {{ cat.icon }}
+      </div>
+      <span class="cat-grid-label">{{ cat.label }}</span>
+    </button>
+  </div>
+
+  <!-- ── Numpad ───────────────────────────────────────────────────────────── -->
+  <div class="numpad">
+    <button *ngFor="let key of numpadKeys"
+            class="numpad-key"
+            [class.numpad-back]="key === '⌫'"
+            (click)="pressKey(key)">
+      {{ key }}
+    </button>
+  </div>
+
+  <!-- ── Action buttons ───────────────────────────────────────────────────── -->
+  <div class="entry-actions">
+    <button class="action-income" (click)="saveTransaction(TT.CREDIT)">
+      <span class="action-sym">+</span>
+      <span>Income</span>
+    </button>
+    <button class="action-expense" (click)="saveTransaction(TT.DEBIT)">
+      <span class="action-sym">−</span>
+      <span>Expense</span>
+    </button>
+  </div>
+
+</div>

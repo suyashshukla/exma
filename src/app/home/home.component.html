@@ -1,144 +1,290 @@
-<div class="app-container h-100 d-flex flex-column">
+<div class="monefy-layout">
 
-    <header class="header-section position-sticky top-0 bg-white shadow-sm p-3 mb-3">
-       <div class="d-flex justify-content-between align-items-start header-container">
+  <!-- ══════════════════════════════════════════════════════════════════════
+       LEFT SIDEBAR  —  desktop only (hidden on mobile via CSS)
+  ═══════════════════════════════════════════════════════════════════════════ -->
+  <aside class="monefy-sidenav">
 
-  <div class="w-100">
-
-    <img src="../../assets/exma-logo-cropped.png" alt="Exma Logo" class="header-logo mb-3">
-
-    <div>
-      <div class="fw-bold fs-5 text-dark">Hi, {{currentUser.displayName}} 👋</div>
-      <div class="text-secondary small">Here’s your daily overview</div>
+    <!-- Brand -->
+    <div class="sidenav-brand">
+      <img src="assets/exma-icon-transparent.png" class="sidenav-logo" alt="exma" />
+      <span class="sidenav-brand-name">exma</span>
     </div>
 
-    <div class="d-flex align-items-center justify-content-between mt-3 date-nav">
-
-      <button class="btn btn-sm btn-light shadow-sm" (click)="goToPreviousDay()">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-
-      <span class="date-display fw-semibold mx-3">
-        {{ today | date:'EEEE, d MMMM yyyy' }}
-      </span>
-
-      <button class="btn btn-sm btn-light shadow-sm" (click)="goToNextDay()">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-
-    </div>
-
-    <div class="d-flex align-items-center mt-4">
-      <i class="fa-solid fa-wallet fa-lg me-2 text-success"></i>
-      <span class="fw-bold fs-4"
-            [ngClass]="getDailyBalance() > 0 ? 'text-success' : 'text-danger'">
-        {{ getDailyBalance() | currency : 'INR' : 'symbol' : '1.0-0' }}
-      </span>
-    </div>
-
-  </div>
-
-  <div class="d-flex align-items-start">
-      <button class="btn btn-outline-secondary border-0 logout-btn" (click)="logout()">
-          <i class="fa-solid fa-right-from-bracket"></i>
-      </button>
-  </div>
-
-</div>
-    </header>
-
-    <div class="transaction-container h-100 flex-grow-1 d-flex flex-column py-3">
-
-        <div *ngIf="expenses.length === 0"
-            class="h-100 flex-grow-1 d-flex align-items-center justify-content-center flex-column py-5 text-muted">
-            <div class="text-center py-5 text-muted empty-state">
-                <i class="fa-solid fa-jar mb-3 icon-pop"></i>
-                <p class="mt-2 fw-semibold fs-6">Your expense jar is empty 🪙</p>
-                <small class="text-secondary d-block">Time to add your first transaction!</small>
-            </div>
-        </div>
-
-        <div *ngFor="let expense of expenses"
-            class="transaction-card d-flex align-items-center justify-content-between cursor-pointer"
-            (click)="manageExpense(addTransaction,expense)">
-            <div class="d-flex align-items-center">
-                <div class="icon-box" [ngClass]="expense.type == expenseType.CREDIT ? 'credit' : 'debit'">
-
-                    <i *ngIf="expense.type == expenseType.CREDIT" class="fa-solid fa-arrow-up"></i>
-                    <i *ngIf="expense.type != expenseType.CREDIT" class="fa-solid fa-arrow-down"></i>
-
-                </div>
-
-                <div class="tx-details">
-                    <h6>{{ expense.title }}</h6>
-                    <span>{{ expense.timestamp | date:'shortTime' }}</span>
-                </div>
-            </div>
-
-            <div class="tx-amount" [ngClass]="expense.type == expenseType.CREDIT ? 'text-success' : 'text-danger'">
-                {{ expense.type == expenseType.CREDIT ? '+' : '-' }}
-                {{ expense.amount | currency : 'INR' : 'symbol' : '1.0-0' }}
-            </div>
-        </div>
-    </div>
-
-    <nav class="bottom-actions">
-        <button class="btn-action btn-credit" (click)="openAddTransactionModal(addTransaction, expenseType.CREDIT)">
-            <i class="fa-solid fa-plus"></i>
-            Income
+    <!-- Period controls -->
+    <div class="sidenav-period-section">
+      <div class="period-tabs">
+        <button *ngFor="let p of periods"
+                class="period-tab"
+                [class.active]="currentPeriod === p.value"
+                (click)="setPeriod(p.value)">{{ p.label }}</button>
+      </div>
+      <div class="sidenav-period-nav">
+        <button class="nav-arrow" (click)="goPrev()" [disabled]="currentPeriod === periodType.ALL">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
         </button>
-
-        <button class="btn-action btn-debit" (click)="openAddTransactionModal(addTransaction, expenseType.DEBIT)">
-            <i class="fa-solid fa-minus"></i>
-            Expense
+        <span class="period-label">{{ getPeriodLabel() }}</span>
+        <button class="nav-arrow" (click)="goNext()" [disabled]="currentPeriod === periodType.ALL">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
         </button>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidenav-nav">
+      <div class="sidenav-link active">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 12h8M12 8l4 4-4 4"/>
+        </svg>
+        <span>Dashboard</span>
+      </div>
+      <button class="sidenav-link" (click)="goToAccounts()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="4" width="22" height="16" rx="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+        <span>Accounts</span>
+      </button>
     </nav>
 
-</div>
+    <div class="sidenav-divider"></div>
 
-<ng-template #addTransaction>
-    <div class="modal-content custom-modal-content">
-        <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold text-dark">{{ isEditExpense ? 'Edit' : 'New' }} Transaction</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                (click)="closeModal()"></button>
-        </div>
-        <div class="modal-body pt-4">
-            <form [formGroup]="addTransactionForm">
-
-                <div class="mb-4">
-                    <label class="form-label text-muted small fw-bold text-uppercase">What is this for?</label>
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text bg-light border-0"><i
-                                class="fa-regular fa-note-sticky"></i></span>
-                        <input type="text" class="form-control bg-light border-0" formControlName="title"
-                            placeholder="e.g. Netflix, Salary" />
-                    </div>
-                </div>
-
-                <div class="mb-2">
-                    <label class="form-label text-muted small fw-bold text-uppercase">Amount</label>
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text bg-light border-0"><i
-                                class="fa-solid fa-indian-rupee-sign"></i></span>
-                        <input type="number" class="form-control bg-light border-0 fw-bold" formControlName="amount"
-                            placeholder="0.00" />
-                    </div>
-                </div>
-
-            </form>
-        </div>
-        <div class="modal-footer border-0">
-            <button type="button" class="btn btn-primary w-100 py-3 rounded-3 fw-bold"
-                style="background: var(--primary-grad); border:none;" (click)="saveExpense()">
-                {{ isEditExpense ? 'Update' : 'Save' }} Transaction
-            </button>
-            <div *ngIf="isEditExpense" class="w-100 mt-2">
-                <button type="button" class="btn btn-outline-danger w-100 py-3 rounded-3 fw-bold"
-                    (click)="deleteExpense(addTransactionForm.get('expenseId')?.value)">
-                    Delete Transaction
-                </button>
-            </div>
-        </div>
+    <!-- Income / Expense action buttons -->
+    <div class="sidenav-actions">
+      <button class="sidenav-cta sidenav-income" (click)="addTransaction('CREDIT')">
+        <span class="sidenav-cta-sym">+</span>
+        <span>Income</span>
+      </button>
+      <button class="sidenav-cta sidenav-expense" (click)="addTransaction('DEBIT')">
+        <span class="sidenav-cta-sym">−</span>
+        <span>Expense</span>
+      </button>
     </div>
-</ng-template>
+
+    <!-- Footer: logout -->
+    <div class="sidenav-footer">
+      <button class="sidenav-logout" (click)="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span>Sign out</span>
+      </button>
+    </div>
+
+  </aside>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MAIN  —  full width on mobile, right column on desktop
+  ═══════════════════════════════════════════════════════════════════════════ -->
+  <div class="monefy-app">
+
+    <!-- ── HERO  —  dark teal (header + chart + totals) ───────────────────── -->
+    <div class="monefy-hero">
+
+      <!-- Mobile header (hidden on desktop via CSS) -->
+      <header class="monefy-header">
+
+        <div class="header-row-1">
+          <span class="app-brand">exma</span>
+          <div class="period-tabs">
+            <button *ngFor="let p of periods"
+                    class="period-tab"
+                    [class.active]="currentPeriod === p.value"
+                    (click)="setPeriod(p.value)">{{ p.label }}</button>
+          </div>
+          <div class="header-icons">
+            <button class="icon-btn" title="Accounts" (click)="goToAccounts()">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2"/>
+                <line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+            </button>
+            <button class="icon-btn" title="Sign out" (click)="logout()">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="header-row-2">
+          <button class="nav-arrow" (click)="goPrev()" [disabled]="currentPeriod === periodType.ALL">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <span class="period-label">{{ getPeriodLabel() }}</span>
+          <button class="nav-arrow" (click)="goNext()" [disabled]="currentPeriod === periodType.ALL">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+
+      </header>
+
+      <!-- Donut chart -->
+      <section class="chart-section">
+        <div class="chart-wrap">
+          <svg viewBox="0 0 300 300" class="donut-svg">
+
+            <circle cx="150" cy="150" r="100"
+                    fill="none" stroke="rgba(255,255,255,.08)" stroke-width="52"/>
+
+            <circle *ngFor="let seg of chartSegments"
+                    cx="150" cy="150" r="100"
+                    fill="none"
+                    [attr.stroke]="seg.color"
+                    stroke-width="52"
+                    [attr.stroke-dasharray]="seg.dasharray"
+                    [attr.stroke-dashoffset]="seg.dashoffset"
+                    transform="rotate(-90 150 150)"
+                    stroke-linecap="butt"
+                    class="donut-segment"
+                    [class.dimmed]="selectedCategory !== null && selectedCategory !== seg.category"
+                    (click)="selectCategory(seg.category)"/>
+
+            <circle *ngIf="chartSegments.length === 0"
+                    cx="150" cy="150" r="100"
+                    fill="none" stroke="rgba(255,255,255,.12)" stroke-width="52"/>
+
+            <ng-container *ngFor="let seg of chartSegments">
+              <text *ngIf="seg.showIcon"
+                    [attr.x]="seg.iconX"
+                    [attr.y]="seg.iconY"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                    class="chart-icon-label">{{ seg.icon }}</text>
+            </ng-container>
+
+            <text x="150" y="138" text-anchor="middle" class="chart-lbl-sm">Balance</text>
+            <text x="150" y="170" text-anchor="middle" class="chart-lbl-lg"
+                  [attr.fill]="balance >= 0 ? '#A5D6A7' : '#FFCDD2'">
+              {{ balance | currency:'INR':'symbol':'1.0-0' }}
+            </text>
+
+          </svg>
+        </div>
+      </section>
+
+      <!-- Income / Expense totals -->
+      <div class="totals-strip">
+        <div class="total-col">
+          <span class="total-indicator income-indicator">↑</span>
+          <span class="total-label">Income</span>
+          <span class="total-val income-val">{{ totalIncome | currency:'INR':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="total-divider"></div>
+        <div class="total-col">
+          <span class="total-indicator expense-indicator">↓</span>
+          <span class="total-label">Expenses</span>
+          <span class="total-val expense-val">{{ totalExpenses | currency:'INR':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+
+    </div><!-- /.monefy-hero -->
+
+
+    <!-- ── CONTENT  —  light card section ─────────────────────────────────── -->
+    <div class="monefy-content">
+
+      <!-- Two-column grid on desktop, single column on mobile -->
+      <div class="content-grid">
+
+        <!-- Category breakdown -->
+        <section class="cat-section" *ngIf="categoryLegend.length > 0">
+          <button *ngFor="let seg of categoryLegend"
+                  class="cat-row"
+                  [class.active]="selectedCategory === seg.category"
+                  (click)="selectCategory(seg.category)">
+
+            <div class="cat-icon-wrap"
+                 [style.background]="seg.color + '20'"
+                 [style.color]="seg.color">
+              {{ seg.icon }}
+            </div>
+
+            <div class="cat-body">
+              <div class="cat-top-row">
+                <span class="cat-name">{{ seg.label }}</span>
+                <span class="cat-amount">{{ seg.amount | currency:'INR':'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="cat-track">
+                <div class="cat-fill"
+                     [style.width.%]="seg.percentage * 100"
+                     [style.background]="seg.color"></div>
+              </div>
+            </div>
+
+          </button>
+        </section>
+
+        <!-- Transaction list -->
+        <section class="tx-section">
+
+          <div *ngIf="filteredExpenses.length === 0" class="empty-state">
+            <div class="empty-icon">🌿</div>
+            <p>No transactions yet</p>
+            <small>Tap + or − to add one</small>
+          </div>
+
+          <div class="tx-card" *ngIf="filteredExpenses.length > 0">
+            <div *ngFor="let expense of filteredExpenses; let last = last"
+                 class="tx-row"
+                 [class.tx-last]="last"
+                 (click)="editTransaction(expense)">
+
+              <div class="tx-icon"
+                   [style.background]="getCategoryMeta(expense.category).color + '20'"
+                   [style.color]="getCategoryMeta(expense.category).color">
+                {{ getCategoryMeta(expense.category).icon }}
+              </div>
+
+              <div class="tx-info">
+                <div class="tx-title">{{ expense.title || getCategoryMeta(expense.category).label }}</div>
+                <div class="tx-sub">
+                  {{ getCategoryMeta(expense.category).label }}&ensp;·&ensp;{{ expense.timestamp | date:'d MMM, h:mm a' }}
+                </div>
+              </div>
+
+              <div class="tx-amount"
+                   [ngClass]="expense.type === expenseType.CREDIT ? 'tx-credit' : 'tx-debit'">
+                {{ expense.type === expenseType.CREDIT ? '+' : '−' }}{{ expense.amount | currency:'INR':'symbol':'1.0-0' }}
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+      </div><!-- /.content-grid -->
+
+    </div><!-- /.monefy-content -->
+
+
+    <!-- Mobile bottom CTAs (hidden on desktop via CSS) -->
+    <nav class="monefy-bottom">
+      <button class="cta-income" (click)="addTransaction('CREDIT')">
+        <span class="cta-symbol">+</span>
+        <span class="cta-label">Income</span>
+      </button>
+      <div class="cta-divider"></div>
+      <button class="cta-expense" (click)="addTransaction('DEBIT')">
+        <span class="cta-symbol">−</span>
+        <span class="cta-label">Expense</span>
+      </button>
+    </nav>
+
+  </div><!-- /.monefy-app -->
+
+</div><!-- /.monefy-layout -->

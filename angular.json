@@ -38,7 +38,7 @@
           },
           "configurations": {
             "production": {
-              "outputPath": "../../../../usr/local/var/www/dist/exma",
+              "outputPath": "dist/exma",
               "budgets": [
                 {
                   "type": "initial",

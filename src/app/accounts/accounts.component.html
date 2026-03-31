@@ -1,0 +1,93 @@
+<div class="accounts-screen">
+
+  <!-- ── Header ───────────────────────────────────────────────────────── -->
+  <header class="accounts-header">
+    <button class="icon-btn" (click)="goBack()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <span class="accounts-title">My Accounts</span>
+    <button class="icon-btn add-btn" (click)="openAddPanel()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ── Total balance ─────────────────────────────────────────────────── -->
+  <div class="total-balance-card">
+    <div class="total-label">Total Balance</div>
+    <div class="total-amount" [ngClass]="totalBalance >= 0 ? 'positive' : 'negative'">
+      {{ totalBalance | currency:'INR':'symbol':'1.0-0' }}
+    </div>
+    <div class="total-sub">Across {{ accountVMs.length }} account{{ accountVMs.length !== 1 ? 's' : '' }}</div>
+  </div>
+
+  <!-- ── Account cards ──────────────────────────────────────────────────── -->
+  <div class="account-list">
+
+    <div *ngIf="accountVMs.length === 0" class="empty-state">
+      <div class="empty-icon">💼</div>
+      <p>No accounts yet</p>
+      <small>Tap + to add your first account</small>
+    </div>
+
+    <div *ngFor="let vm of accountVMs" class="account-card">
+      <div class="account-icon-wrap" [style.background]="vm.account.color + '22'" [style.color]="vm.account.color">
+        {{ vm.icon }}
+      </div>
+      <div class="account-info">
+        <div class="account-name">
+          {{ vm.account.name }}
+          <span class="default-badge" *ngIf="vm.account.isDefault">Default</span>
+        </div>
+        <div class="account-type">{{ ACCOUNT_META[vm.account.type].label }}</div>
+        <div class="account-stats">
+          <span class="stat-income">↑ {{ vm.income | currency:'INR':'symbol':'1.0-0' }}</span>
+          <span class="stat-sep">·</span>
+          <span class="stat-expense">↓ {{ vm.expenses | currency:'INR':'symbol':'1.0-0' }}</span>
+        </div>
+      </div>
+      <div class="account-balance" [ngClass]="vm.balance >= 0 ? 'bal-positive' : 'bal-negative'">
+        {{ vm.balance | currency:'INR':'symbol':'1.0-0' }}
+      </div>
+      <div class="account-actions">
+        <button class="acc-action-btn" title="Set as default" (click)="setDefault(vm.account.accountId)" *ngIf="!vm.account.isDefault">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </button>
+        <button class="acc-action-btn delete-btn" title="Delete" (click)="deleteAccount(vm.account.accountId)" *ngIf="!vm.account.isDefault">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Add account panel (bottom sheet style) ────────────────────────── -->
+  <div class="add-panel-overlay" *ngIf="showAddPanel" (click)="cancelAdd()"></div>
+  <div class="add-panel" *ngIf="showAddPanel">
+    <div class="add-panel-handle"></div>
+    <h3 class="add-panel-title">Add Account</h3>
+
+    <label class="field-label">Account Name</label>
+    <input class="field-input" type="text" [(ngModel)]="newAccountName" placeholder="e.g. HDFC Savings" autofocus />
+
+    <label class="field-label mt-3">Account Type</label>
+    <div class="type-grid">
+      <button *ngFor="let t of accountTypes"
+              class="type-btn"
+              [class.selected]="newAccountType === t"
+              (click)="newAccountType = t">
+        <span>{{ ACCOUNT_META[t].icon }}</span>
+        <span>{{ ACCOUNT_META[t].label }}</span>
+      </button>
+    </div>
+
+    <div class="add-panel-actions">
+      <button class="btn-cancel" (click)="cancelAdd()">Cancel</button>
+      <button class="btn-save" (click)="addAccount()">Add Account</button>
+    </div>
+  </div>
+
+</div>

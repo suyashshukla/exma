@@ -8,6 +8,7 @@ export class Expense {
     timestamp!: Date;
     source!: ExpenseSource;
     title!: string;
+    accountId!: string;
 
     // Can be removed if firestore allows relation data retrieval
     userId!: string;
@@ -21,6 +22,7 @@ export class Expense {
         this.timestamp = args.timestamp;
         this.source = args.source;
         this.title = args.title;
+        this.accountId = args.accountId || '';
         this.userId = args.userId;
         this.deviceId = args.deviceId;
     }
