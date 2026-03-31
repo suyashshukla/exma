@@ -19,18 +19,18 @@ export enum ExpenseCategory {
 }
 
 export const CATEGORY_META: Record<ExpenseCategory, { icon: string; color: string; label: string }> = {
-    [ExpenseCategory.FOOD]:          { icon: '🍽️', color: '#FF7043', label: 'Food' },
-    [ExpenseCategory.TRANSPORT]:     { icon: '🚗', color: '#42A5F5', label: 'Transport' },
-    [ExpenseCategory.UTILITIES]:     { icon: '⚡', color: '#AB47BC', label: 'Bills' },
-    [ExpenseCategory.ENTERTAINMENT]: { icon: '🎬', color: '#EF5350', label: 'Entertainment' },
-    [ExpenseCategory.HEALTH]:        { icon: '💊', color: '#EC407A', label: 'Health' },
-    [ExpenseCategory.SHOPPING]:      { icon: '🛍️', color: '#26C6DA', label: 'Shopping' },
-    [ExpenseCategory.EDUCATION]:     { icon: '📚', color: '#5C6BC0', label: 'Education' },
-    [ExpenseCategory.TRAVEL]:        { icon: '✈️', color: '#66BB6A', label: 'Travel' },
-    [ExpenseCategory.RENT]:          { icon: '🏠', color: '#FFA726', label: 'House' },
-    [ExpenseCategory.SALARY]:        { icon: '💼', color: '#4CAF50', label: 'Salary' },
-    [ExpenseCategory.FREELANCE]:     { icon: '💻', color: '#26A69A', label: 'Freelance' },
-    [ExpenseCategory.OTHER]:         { icon: '📦', color: '#90A4AE', label: 'Other' },
+    [ExpenseCategory.FOOD]:          { icon: '🍽️', color: '#C97B62', label: 'Food' },
+    [ExpenseCategory.TRANSPORT]:     { icon: '🚗', color: '#6096BE', label: 'Transport' },
+    [ExpenseCategory.UTILITIES]:     { icon: '⚡', color: '#8E6FAA', label: 'Bills' },
+    [ExpenseCategory.ENTERTAINMENT]: { icon: '🎬', color: '#B06868', label: 'Entertainment' },
+    [ExpenseCategory.HEALTH]:        { icon: '💊', color: '#AA6882', label: 'Health' },
+    [ExpenseCategory.SHOPPING]:      { icon: '🛍️', color: '#5A9EAA', label: 'Shopping' },
+    [ExpenseCategory.EDUCATION]:     { icon: '📚', color: '#6870A8', label: 'Education' },
+    [ExpenseCategory.TRAVEL]:        { icon: '✈️', color: '#6AA870', label: 'Travel' },
+    [ExpenseCategory.RENT]:          { icon: '🏠', color: '#C28A52', label: 'House' },
+    [ExpenseCategory.SALARY]:        { icon: '💼', color: '#5A9862', label: 'Salary' },
+    [ExpenseCategory.FREELANCE]:     { icon: '💻', color: '#4D9290', label: 'Freelance' },
+    [ExpenseCategory.OTHER]:         { icon: '📦', color: '#8A9EAA', label: 'Other' },
 };
 
 export enum AccountType {

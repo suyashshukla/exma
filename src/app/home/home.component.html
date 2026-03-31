@@ -139,7 +139,7 @@
           <svg viewBox="0 0 300 300" class="donut-svg">
 
             <circle cx="150" cy="150" r="100"
-                    fill="none" stroke="rgba(255,255,255,.08)" stroke-width="52"/>
+                    fill="none" stroke="rgba(0,0,0,.06)" stroke-width="52"/>
 
             <circle *ngFor="let seg of chartSegments"
                     cx="150" cy="150" r="100"
@@ -156,7 +156,7 @@
 
             <circle *ngIf="chartSegments.length === 0"
                     cx="150" cy="150" r="100"
-                    fill="none" stroke="rgba(255,255,255,.12)" stroke-width="52"/>
+                    fill="none" stroke="rgba(0,0,0,.08)" stroke-width="52"/>
 
             <ng-container *ngFor="let seg of chartSegments">
               <text *ngIf="seg.showIcon"
@@ -169,7 +169,7 @@
 
             <text x="150" y="138" text-anchor="middle" class="chart-lbl-sm">Balance</text>
             <text x="150" y="170" text-anchor="middle" class="chart-lbl-lg"
-                  [attr.fill]="balance >= 0 ? '#A5D6A7' : '#FFCDD2'">
+                  [attr.fill]="balance >= 0 ? '#2D8A5A' : '#C05050'">
               {{ balance | currency:'INR':'symbol':'1.0-0' }}
             </text>
 
