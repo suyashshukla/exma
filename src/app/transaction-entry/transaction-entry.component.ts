@@ -216,16 +216,4 @@ export class TransactionEntryComponent implements OnInit {
         this.router.navigate(['/home']);
     }
 
-    // ── Viewport zoom for note input ─────────────────────────────────────────────
-
-    zoomToInput(event: FocusEvent): void {
-        const viewport = document.querySelector('meta[name=viewport]') as HTMLMetaElement;
-        if (viewport) viewport.content = 'width=device-width, initial-scale=1.5, maximum-scale=4';
-        setTimeout(() => (event.target as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
-    }
-
-    resetZoom(): void {
-        const viewport = document.querySelector('meta[name=viewport]') as HTMLMetaElement;
-        if (viewport) viewport.content = 'width=device-width, initial-scale=1';
-    }
 }

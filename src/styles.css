@@ -98,8 +98,8 @@ input, select { font-family: inherit; }
   display: flex; flex-direction: column;
   flex: 1;
   min-width: 0;
-  min-height: 100vh;
-  padding-bottom: 92px;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* ── Hero section (light sage) ────────────────────────────────────────────── */
@@ -240,6 +240,10 @@ input, select { font-family: inherit; }
   margin-top: -20px;
   position: relative; z-index: 5;
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* ── Category breakdown rows ───────────────────────────────────────────────── */
@@ -395,7 +399,7 @@ input, select { font-family: inherit; }
 
 .note-input {
   background: rgba(255,255,255,.18); border: none; border-radius: 12px;
-  padding: 10px 18px; font-size: 13px; color: #fff;
+  padding: 10px 18px; font-size: 16px; color: #fff;
   width: 100%; max-width: 320px; text-align: center; outline: none;
   letter-spacing: .2px;
 }
@@ -740,7 +744,27 @@ input, select { font-family: inherit; }
 .sidenav-logout:hover { background: var(--bg); color: var(--text-2); }
 
 /* ── Content grid wrapper ─────────────────────────────────────────────────── */
-.content-grid { display: contents; }
+.content-grid {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 88px; /* clear fixed bottom bar */
+}
+
+.content-grid .cat-section {
+  flex-shrink: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+  margin: 12px 16px 4px;
+}
+
+.content-grid .tx-section {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
 
 
 /* ══════════════════════════════════════════════════════
@@ -753,7 +777,6 @@ input, select { font-family: inherit; }
   .monefy-app {
     flex: 1;
     min-width: 0;
-    padding-bottom: 0;
   }
 
   .monefy-header { display: none !important; }
@@ -772,17 +795,28 @@ input, select { font-family: inherit; }
   .content-grid {
     display: grid;
     grid-template-columns: minmax(260px, 320px) 1fr;
-    align-items: start;
+    align-items: stretch;
     gap: 0;
+    padding-bottom: 0;
+    height: 100%;
+    overflow: hidden;
   }
 
   .content-grid .cat-section {
+    max-height: none;
+    height: 100%;
+    overflow-y: auto;
     position: sticky;
-    top: 16px;
-    margin: 16px 0 16px 16px;
+    top: 0;
+    margin: 0 0 0 16px;
+    padding-top: 16px;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
   }
 
   .content-grid .tx-section {
+    flex: unset;
+    height: 100%;
+    overflow-y: auto;
     padding: 16px 16px 8px;
   }
 
@@ -799,4 +833,13 @@ input, select { font-family: inherit; }
     min-height: 100vh;
     box-shadow: var(--shadow-card);
   }
+}
+
+/* ── Mobile: shrink chart so hero fits in ~48vh, leaving room for content ─── */
+@media (max-width: 767px) {
+  .chart-wrap    { width: min(200px, 56vw); }
+  .chart-section { padding: 12px 20px 0; }
+  .totals-strip  { margin: 10px 20px 0; }
+  .monefy-hero   { padding-bottom: 20px; }
+  .monefy-content { margin-top: -16px; }
 }
