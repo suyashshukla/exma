@@ -837,6 +837,29 @@ input, select { font-family: inherit; }
 
 /* ── Mobile: shrink chart so hero fits in ~48vh, leaving room for content ─── */
 @media (max-width: 767px) {
+  .monefy-app {
+    overflow-y: auto;
+    height: 100vh;
+    -webkit-overflow-scrolling: touch;
+  }
+  .monefy-content {
+    overflow: visible;
+    flex: none;
+  }
+  .content-grid {
+    overflow: visible;
+    flex: none;
+    padding-bottom: 100px; /* space for fixed bottom nav */
+  }
+  .content-grid .cat-section {
+    max-height: none;
+    overflow: visible;
+    margin-bottom: 20px;
+  }
+  .content-grid .tx-section {
+    overflow: visible;
+    flex: none;
+  }
   .chart-wrap    { width: min(200px, 56vw); }
   .chart-section { padding: 12px 20px 0; }
   .totals-strip  { margin: 10px 20px 0; }
